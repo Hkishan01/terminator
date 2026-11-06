@@ -17,7 +17,7 @@ constexpr size_t kMaxOutputLines = 3000;
 }
 
 Tab::Tab(string tabTitle)
-    : title(std::move(tabTitle)),
+    : title(move(tabTitle)),
       output{"Terminator: enter a command and press Return."} {
     char cwd[4096];
     if (getcwd(cwd, sizeof(cwd)) != nullptr) workingDirectory = cwd;

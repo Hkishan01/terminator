@@ -116,7 +116,7 @@ ParseState tokenize(const string& input, vector<Token>& tokens,
 
     auto finishWord = [&] {
         if (wordStarted) {
-            tokens.push_back({TokenType::Word, std::move(word)});
+            tokens.push_back({TokenType::Word, move(word)});
             word.clear();
             wordStarted = false;
         }

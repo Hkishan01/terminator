@@ -91,7 +91,7 @@ void flushOutput(const Tab& tab, int fd, size_t& lineIndex,
             if (length && !readAll(commandFd, payload.data(), length)) break;
             if (type == 'Q') break;
             if (type == 'D') {
-                tabs[0].workingDirectory = std::move(payload);
+                tabs[0].workingDirectory = move(payload);
                 continue;
             }
             if (type == 'S' && length == sizeof(int)) {
@@ -99,7 +99,7 @@ void flushOutput(const Tab& tab, int fd, size_t& lineIndex,
                 memcpy(&signalNumber, payload.data(), sizeof(signalNumber));
                 runner.signalForeground(signalNumber, 0);
             } else if (type == 'C') {
-                tabs[0].input = std::move(payload);
+                tabs[0].input = move(payload);
                 tabs[0].inputCursor = tabs[0].input.size();
                 runner.submit(0);
             }

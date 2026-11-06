@@ -23,7 +23,7 @@ string trim(string value) {
 }
 
 string unquoteWatchCommand(string command) {
-    command = trim(std::move(command));
+    command = trim(move(command));
     if (command.size() >= 2 &&
         (command.front() == '\'' || command.front() == '"') &&
         command.back() == command.front())
@@ -127,13 +127,13 @@ void CommandRunner::ensureWorkers(size_t tabCount) {
                         return slot->stopping || !slot->tasks.empty();
                     });
                     if (slot->stopping && slot->tasks.empty()) return;
-                    task = std::move(slot->tasks.front());
+                    task = move(slot->tasks.front());
                     slot->tasks.pop_front();
                 }
                 task();
             }
         });
-        workers_.push_back(std::move(worker));
+        workers_.push_back(move(worker));
     }
 }
 

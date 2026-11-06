@@ -24,7 +24,7 @@ bool JobManager::launch(size_t tabIndex, const shell::Pipeline& pipeline,
     if (tabIndex >= foregroundByTab_.size()) foregroundByTab_.resize(tabIndex + 1, -1);
     if (!pipeline.background) foregroundByTab_[tabIndex] = static_cast<int>(jobs_.size());
     Entry entry;
-    entry.process = std::move(processJob);
+    entry.process = move(processJob);
     entry.tabIndex = tabIndex;
     entry.command = command;
     entry.label = label;
@@ -34,7 +34,7 @@ bool JobManager::launch(size_t tabIndex, const shell::Pipeline& pipeline,
     if (tabIndex >= nextJobIdByTab_.size()) nextJobIdByTab_.resize(tabIndex + 1, 1);
     entry.jobId = nextJobIdByTab_[tabIndex]++;
     const int jobId = entry.jobId;
-    jobs_.push_back(std::move(entry));
+    jobs_.push_back(move(entry));
     output(tabIndex, "[" + to_string(jobId) + "] started " + command + "\n", {});
     return true;
 }
@@ -56,7 +56,7 @@ bool JobManager::startWatch(size_t tabIndex, const shell::Pipeline& pipeline,
         jobs_[static_cast<size_t>(current)].watchMode;
     if (!watchAlreadyActive) foregroundByTab_[tabIndex] = static_cast<int>(index);
     Entry entry;
-    entry.process = std::move(child);
+    entry.process = move(child);
     entry.tabIndex = tabIndex;
     entry.command = command;
     entry.background = false;
@@ -66,7 +66,7 @@ bool JobManager::startWatch(size_t tabIndex, const shell::Pipeline& pipeline,
     entry.pipeline = pipeline;
     if (tabIndex >= nextJobIdByTab_.size()) nextJobIdByTab_.resize(tabIndex + 1, 1);
     entry.jobId = nextJobIdByTab_[tabIndex]++;
-    jobs_.push_back(std::move(entry));
+    jobs_.push_back(move(entry));
     const auto now = time(nullptr);
     output(tabIndex, "\"" + command + "\", " + to_string(now) + ":\n" +
            string(52, '-') + "\n", {});
@@ -160,7 +160,7 @@ bool JobManager::startNextRun(Entry& job, const Output& output) {
         return false;
     }
 
-    job.process = std::move(child);
+    job.process = move(child);
     job.waitingToRepeat = false;
     output(job.tabIndex, "\"" + job.command + "\", " +
            to_string(time(nullptr)) + ":\n" + string(52, '-') + "\n", {});
